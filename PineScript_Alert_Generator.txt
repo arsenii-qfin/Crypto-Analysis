@@ -1,0 +1,24 @@
+//@version=6
+indicator('Delta Change Alert', overlay = true)
+
+// input: define the delta threshold
+deltaThreshold = input.float(1.0, '% Change Threshold', step = 0.1) / 100
+
+// aggregate twelve one hour bars into one twelse hour
+timeframe = input.timeframe('60', 'Chart Timeframe')
+lookBack = input.int(12, 'Lookback Period')
+
+priceXHoursAgo = request.security(syminfo.tickerid, timeframe, close[lookBack])
+currentPrice = close
+
+percentChange = (currentPrice - priceXHoursAgo) / priceXHoursAgo
+
+// logic of the trigger condition
+triggerCondition = na(priceXHoursAgo) ? false : math.abs(percentChange) > deltaThreshold
+
+// Plot trigger points to the chart
+plotshape(triggerCondition, style = shape.labelup, location = location.abovebar, color = color.new(color.green, 0), text = 'Alert!')
+
+// alert generation
+if triggerCondition
+    alert('Price has moved by more than 1% in the last 12 hours!', alert.freq_once_per_bar)
