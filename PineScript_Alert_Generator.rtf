@@ -1,0 +1,51 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2761
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;\f1\fnil\fcharset0 Menlo-Bold;}
+{\colortbl;\red255\green255\blue255;\red101\green103\blue115;\red255\green255\blue255;\red255\green255\blue255;
+\red74\green135\blue243;\red46\green126\blue46;\red56\green178\blue151;\red199\green202\blue212;\red242\green100\blue109;
+\red240\green106\blue20;}
+{\*\expandedcolortbl;;\cssrgb\c47059\c48235\c52549;\cssrgb\c100000\c100000\c100000;\cssrgb\c100000\c100000\c100000;
+\cssrgb\c35686\c61176\c96471;\cssrgb\c21961\c55686\c23529;\cssrgb\c25882\c74118\c65882;\cssrgb\c81961\c83137\c86275;\cssrgb\c96863\c48627\c50196;
+\cssrgb\c96078\c49804\c9020;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs26 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 //
+\f1\b @version=
+\f0\b0 6\cf4 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf5 \strokec5 indicator\cf4 \strokec4 (\cf6 \strokec6 'Delta Change Alert'\cf7 \strokec7 ,\cf4 \strokec4  \cf8 \strokec8 overlay\cf4 \strokec4  \cf7 \strokec7 =\cf4 \strokec4  \cf9 \strokec9 true\cf4 \strokec4 )\
+\
+\pard\pardeftab720\partightenfactor0
+\cf2 \strokec2 // input: define the delta threshold\cf4 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf8 \strokec8 deltaThreshold\cf4 \strokec4  \cf7 \strokec7 =\cf4 \strokec4  \cf5 \strokec5 input.float\cf4 \strokec4 (\cf10 \strokec10 1.0\cf7 \strokec7 ,\cf4 \strokec4  \cf6 \strokec6 '% Change Threshold'\cf7 \strokec7 ,\cf4 \strokec4  \cf8 \strokec8 step\cf4 \strokec4  \cf7 \strokec7 =\cf4 \strokec4  \cf10 \strokec10 0.1\cf4 \strokec4 ) \cf7 \strokec7 /\cf4 \strokec4  \cf10 \strokec10 100\cf4 \strokec4 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf2 \strokec2 // aggregate twelve one hour bars into one twelse hour\cf4 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf8 \strokec8 timeframe\cf4 \strokec4  \cf7 \strokec7 =\cf4 \strokec4  \cf5 \strokec5 input.timeframe\cf4 \strokec4 (\cf6 \strokec6 '60'\cf7 \strokec7 ,\cf4 \strokec4  \cf6 \strokec6 'Chart Timeframe'\cf4 \strokec4 )\
+\cf8 \strokec8 lookBack\cf4 \strokec4  \cf7 \strokec7 =\cf4 \strokec4  \cf5 \strokec5 input.int\cf4 \strokec4 (\cf10 \strokec10 12\cf7 \strokec7 ,\cf4 \strokec4  \cf6 \strokec6 'Lookback Period'\cf4 \strokec4 )\
+\
+\cf8 \strokec8 priceXHoursAgo\cf4 \strokec4  \cf7 \strokec7 =\cf4 \strokec4  \cf5 \strokec5 request.security\cf4 \strokec4 (\cf9 \strokec9 syminfo.tickerid\cf7 \strokec7 ,\cf4 \strokec4  \cf8 \strokec8 timeframe\cf7 \strokec7 ,\cf4 \strokec4  \cf9 \strokec9 close\cf4 \strokec4 [\cf8 \strokec8 lookBack\cf4 \strokec4 ])\
+\cf8 \strokec8 currentPrice\cf4 \strokec4  \cf7 \strokec7 =\cf4 \strokec4  \cf9 \strokec9 close\cf4 \strokec4 \
+\
+\cf8 \strokec8 percentChange\cf4 \strokec4  \cf7 \strokec7 =\cf4 \strokec4  (\cf8 \strokec8 currentPrice\cf4 \strokec4  \cf7 \strokec7 -\cf4 \strokec4  \cf8 \strokec8 priceXHoursAgo\cf4 \strokec4 ) \cf7 \strokec7 /\cf4 \strokec4  \cf8 \strokec8 priceXHoursAgo\cf4 \strokec4 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf2 \strokec2 // logic of the trigger condition\cf4 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf8 \strokec8 triggerCondition\cf4 \strokec4  \cf7 \strokec7 =\cf4 \strokec4  \cf5 \strokec5 na\cf4 \strokec4 (\cf8 \strokec8 priceXHoursAgo\cf4 \strokec4 ) \cf7 \strokec7 ?\cf4 \strokec4  \cf9 \strokec9 false\cf4 \strokec4  \cf7 \strokec7 :\cf4 \strokec4  \cf5 \strokec5 math.abs\cf4 \strokec4 (\cf8 \strokec8 percentChange\cf4 \strokec4 ) \cf7 \strokec7 >\cf4 \strokec4  \cf8 \strokec8 deltaThreshold\cf4 \strokec4 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf2 \strokec2 // Plot trigger points to the chart\cf4 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf5 \strokec5 plotshape\cf4 \strokec4 (\cf8 \strokec8 triggerCondition\cf7 \strokec7 ,\cf4 \strokec4  \cf8 \strokec8 style\cf4 \strokec4  \cf7 \strokec7 =\cf4 \strokec4  \cf9 \strokec9 shape.labelup\cf7 \strokec7 ,\cf4 \strokec4  \cf8 \strokec8 location\cf4 \strokec4  \cf7 \strokec7 =\cf4 \strokec4  \cf9 \strokec9 location.abovebar\cf7 \strokec7 ,\cf4 \strokec4  \cf8 \strokec8 color\cf4 \strokec4  \cf7 \strokec7 =\cf4 \strokec4  \cf5 \strokec5 color.new\cf4 \strokec4 (\cf9 \strokec9 color.green\cf7 \strokec7 ,\cf4 \strokec4  \cf10 \strokec10 0\cf4 \strokec4 )\cf7 \strokec7 ,\cf4 \strokec4  \cf8 \strokec8 text\cf4 \strokec4  \cf7 \strokec7 =\cf4 \strokec4  \cf6 \strokec6 'Alert!'\cf4 \strokec4 )\
+\
+\pard\pardeftab720\partightenfactor0
+\cf2 \strokec2 // alert generation\cf4 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf7 \strokec7 if\cf4 \strokec4  \cf8 \strokec8 triggerCondition\cf4 \strokec4 \
+    \cf5 \strokec5 alert\cf4 \strokec4 (\cf6 \strokec6 'Price has moved by more than 1% in the last 12 hours!'\cf7 \strokec7 ,\cf4 \strokec4  \cf9 \strokec9 alert.freq_once_per_bar\cf4 \strokec4 )\cb1 \
+}
